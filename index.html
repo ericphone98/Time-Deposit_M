@@ -200,11 +200,15 @@
 
 <script>
     // =========================================================================
-    // 💡 Google Apps Script 連結 (在此處最上方設定)
-    // 爸爸的連結: "https://script.google.com/macros/s/AKfycbwZYWFwdkx9crxS7mgzQaR9yBeDHaXPV8KCJ3YGdXBQf9-vWbELoxXzFLMa0jKQdymw/exec"
-    // 媽媽的連結: "https://script.google.com/macros/s/AKfycbxtqyAhZF6uUVrFqbXJ08Vh3V2ZxpVfznXBGMXiD8nmFaHYnLOrUgko9lQcWcFqjaROIQ/exec"
+    // 💡 爸爸與媽媽的連結變數宣告
+    // 製作爸爸版本時：將下方的 GAS_URL 設為 dad
+    // 製作媽媽版本時：將下方的 GAS_URL 設為 mum
     // =========================================================================
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxtqyAhZF6uUVrFqbXJ08Vh3V2ZxpVfznXBGMXiD8nmFaHYnLOrUgko9lQcWcFqjaROIQ/exec";
+    const dad = "https://script.google.com/macros/s/AKfycbwZYWFwdkx9crxS7mgzQaR9yBeDHaXPV8KCJ3YGdXBQf9-vWbELoxXzFLMa0jKQdymw/exec";
+    const mum = "https://script.google.com/macros/s/AKfycbxtqyAhZF6uUVrFqbXJ08Vh3V2ZxpVfznXBGMXiD8nmFaHYnLOrUgko9lQcWcFqjaROIQ/exec";
+
+    // 👈 在這裡選擇要使用的變數 (例如 dad 或 mum)
+    const GAS_URL = mum;
 
     let deposits = [];
     let currentTab = 'active';
@@ -263,12 +267,11 @@
             let data = await res.json();
             if (data && data.rates && data.rates.HKD) {
                 liveCnyToHkdRate = data.rates.HKD;
-                // 改為顯示小數點後四個位
                 document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}`;
                 renderDeposits();
             }
         } catch (e) {
-            document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)} (預設)`;
+            document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}`;
         }
     }
 
@@ -508,7 +511,7 @@
         let finishedHtml = finishedItems.map(x => x.html).join('');
 
         if (currentTab === 'active') {
-            document.getElementById('cardTitle').innerHTML = `<span>進行中定期總本金</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}</span>`;
+            document.getElementById('cardTitle').innerHTML = `<span>進行中定期總本金</span><span class="rate-info" id="rateIndicator">匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}</span>`;
             document.getElementById('cardContentArea').innerHTML = `<span class="amount" id="totalPrincipal">HK$ ${fmt(activeTotalPrin)}</span>`;
             
             let totalMonthly = activeTotalDaily * 30;
@@ -534,7 +537,7 @@
                 rangeText = `${formatDateToDisplay(earliestStart)} 至 ${formatDateToDisplay(latestEnd)}`;
             }
 
-            document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}</span>`;
+            document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}</span>`;
             
             document.getElementById('cardContentArea').innerHTML = `
                 <span class="amount" id="totalPrincipal">HK$ ${fmt(finishedTotalInt)}</span>
