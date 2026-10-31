@@ -263,11 +263,12 @@
             let data = await res.json();
             if (data && data.rates && data.rates.HKD) {
                 liveCnyToHkdRate = data.rates.HKD;
-                document.getElementById('rateIndicator').innerText = `實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(2)}`;
+                // 改為顯示小數點後四個位
+                document.getElementById('rateIndicator').innerText = `實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}`;
                 renderDeposits();
             }
         } catch (e) {
-            document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(2)} (預設)`;
+            document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)} (預設)`;
         }
     }
 
@@ -490,7 +491,6 @@
             let hkdDaily = toHkdValue(dailyInterest, curr);
 
             if (isDone) {
-                // 同時記錄起息日與到期日，用於計算全域時間跨度與排序
                 finishedItems.push({ html: cardHtml, startDate: sDate, endDate: eDate, startStr: item.start, endStr: item.end });
                 finishedTotalInt += hkdInt;
             } else {
@@ -508,7 +508,7 @@
         let finishedHtml = finishedItems.map(x => x.html).join('');
 
         if (currentTab === 'active') {
-            document.getElementById('cardTitle').innerHTML = `<span>進行中定期總本金</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(2)}</span>`;
+            document.getElementById('cardTitle').innerHTML = `<span>進行中定期總本金</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}</span>`;
             document.getElementById('cardContentArea').innerHTML = `<span class="amount" id="totalPrincipal">HK$ ${fmt(activeTotalPrin)}</span>`;
             
             let totalMonthly = activeTotalDaily * 30;
@@ -523,7 +523,6 @@
         } else {
             let rangeText = "";
             if (finishedItems.length > 0) {
-                // 找出所有已完結項目中最早的起息日與最晚的到期日
                 let earliestStart = finishedItems[0].startStr;
                 let latestEnd = finishedItems[0].endStr;
 
@@ -535,7 +534,7 @@
                 rangeText = `${formatDateToDisplay(earliestStart)} 至 ${formatDateToDisplay(latestEnd)}`;
             }
 
-            document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(2)}</span>`;
+            document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}</span>`;
             
             document.getElementById('cardContentArea').innerHTML = `
                 <span class="amount" id="totalPrincipal">HK$ ${fmt(finishedTotalInt)}</span>
