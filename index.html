@@ -267,11 +267,11 @@
             let data = await res.json();
             if (data && data.rates && data.rates.HKD) {
                 liveCnyToHkdRate = data.rates.HKD;
-                document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}`;
+                document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(5)}`;
                 renderDeposits();
             }
         } catch (e) {
-            document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}`;
+            document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(5)}`;
         }
     }
 
@@ -511,7 +511,7 @@
         let finishedHtml = finishedItems.map(x => x.html).join('');
 
         if (currentTab === 'active') {
-            document.getElementById('cardTitle').innerHTML = `<span>進行中定期總本金</span><span class="rate-info" id="rateIndicator">匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}</span>`;
+            document.getElementById('cardTitle').innerHTML = `<span>進行中定期總本金</span><span class="rate-info" id="rateIndicator">匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(5)}</span>`;
             document.getElementById('cardContentArea').innerHTML = `<span class="amount" id="totalPrincipal">HK$ ${fmt(activeTotalPrin)}</span>`;
             
             let totalMonthly = activeTotalDaily * 30;
@@ -537,7 +537,7 @@
                 rangeText = `${formatDateToDisplay(earliestStart)} 至 ${formatDateToDisplay(latestEnd)}`;
             }
 
-            document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}</span>`;
+            document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(5)}</span>`;
             
             document.getElementById('cardContentArea').innerHTML = `
                 <span class="amount" id="totalPrincipal">HK$ ${fmt(finishedTotalInt)}</span>
