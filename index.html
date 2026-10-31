@@ -199,6 +199,11 @@
     </div>
 
 <script>
+    // =========================================================================
+    // 💡 Google Apps Script 連結 (在此處最上方設定)
+    // 爸爸的連結: "https://script.google.com/macros/s/AKfycbwZYWFwdkx9crxS7mgzQaR9yBeDHaXPV8KCJ3YGdXBQf9-vWbELoxXzFLMa0jKQdymw/exec"
+    // 媽媽的連結: "https://script.google.com/macros/s/AKfycbxtqyAhZF6uUVrFqbXJ08Vh3V2ZxpVfznXBGMXiD8nmFaHYnLOrUgko9lQcWcFqjaROIQ/exec"
+    // =========================================================================
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxtqyAhZF6uUVrFqbXJ08Vh3V2ZxpVfznXBGMXiD8nmFaHYnLOrUgko9lQcWcFqjaROIQ/exec";
 
     let deposits = [];
@@ -443,7 +448,6 @@
             const timeDesc = `${totalMonths} 個月 (${totalDays} 天)`;
             const remainText = isDone ? "🎉 已到期完成" : `⏳ 尚餘 ${remainingDays} 天`;
 
-            // 將卡片上的日期轉換為 DD/MM/YYYY 顯示
             const displayStart = formatDateToDisplay(item.start);
             const displayEnd = formatDateToDisplay(item.end);
 
@@ -486,7 +490,8 @@
             let hkdDaily = toHkdValue(dailyInterest, curr);
 
             if (isDone) {
-                finishedItems.push({ html: cardHtml, startDate: sDate, startStr: item.start });
+                // 同時記錄起息日與到期日，用於計算全域時間跨度與排序
+                finishedItems.push({ html: cardHtml, startDate: sDate, endDate: eDate, startStr: item.start, endStr: item.end });
                 finishedTotalInt += hkdInt;
             } else {
                 activeItems.push({ html: cardHtml, endDate: eDate });
@@ -509,18 +514,25 @@
             let totalMonthly = activeTotalDaily * 30;
 
             document.getElementById('totalInterestDisplay').innerHTML = `
-                <div class="breakdown">利息: HK$ ${fmt(activeTotalInt)}</div>
+                <div class="breakdown">總利息: HK$ ${fmt(activeTotalInt)}</div>
                 <div class="daily-monthly-row">
-                    <span>💡 每日總利息: HK$ ${fmt(activeTotalDaily)}</span>
-                    <span>每月總利息: HK$ ${fmt(totalMonthly)}</span>
+                    <span>💡 每日利息: HK$ ${fmt(activeTotalDaily)}</span>
+                    <span>每月利息: HK$ ${fmt(totalMonthly)}</span>
                 </div>
             `;
         } else {
             let rangeText = "";
             if (finishedItems.length > 0) {
-                let latestStart = formatDateToDisplay(finishedItems[0].startStr);
-                let oldestStart = formatDateToDisplay(finishedItems[finishedItems.length - 1].startStr);
-                rangeText = `${oldestStart} 至 ${latestStart}`;
+                // 找出所有已完結項目中最早的起息日與最晚的到期日
+                let earliestStart = finishedItems[0].startStr;
+                let latestEnd = finishedItems[0].endStr;
+
+                finishedItems.forEach(item => {
+                    if (item.startStr < earliestStart) earliestStart = item.startStr;
+                    if (item.endStr > latestEnd) latestEnd = item.endStr;
+                });
+
+                rangeText = `${formatDateToDisplay(earliestStart)} 至 ${formatDateToDisplay(latestEnd)}`;
             }
 
             document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(2)}</span>`;
