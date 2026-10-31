@@ -62,7 +62,6 @@
         .deposit-amt { font-size: 20px; font-weight: bold; color: #248a3d; font-variant-numeric: tabular-nums; }
         .deposit-rate { font-size: 14px; color: var(--hk-orange); font-weight: bold; margin-top: 2px; background: #fff8f0; padding: 2px 6px; border-radius: 4px; }
         .deposit-interest { font-size: 13px; color: #3a3a3c; font-weight: bold; margin-top: 4px; }
-        .custom-tag { font-size: 10px; color: #8e8e93; font-weight: normal; margin-left: 2px; }
 
         /* 進度條與尚餘天數 */
         .progress-box { width: 100%; margin-top: 4px; }
@@ -168,7 +167,7 @@
         <div class="view hidden-right" id="addView">
             <div class="page-header">
                 <button class="back-btn" onclick="switchView('home')">‹ 返回主頁</button>
-                <span class="page-title" id="pageTitle">新增定期存款</span>
+                <span class="page-title" id="pageTitle">新增定期</span>
                 <div style="width: 50px;"></div>
             </div>
             
@@ -199,8 +198,8 @@
     </div>
 
 <script>
-    // 🔗 Google Apps Script 雲端 API 網址
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwZYWFwdkx9crxS7mgzQaR9yBeDHaXPV8KCJ3YGdXBQf9-vWbELoxXzFLMa0jKQdymw/exec";
+    // 🔗 更新後的 Google Apps Script 雲端 API 網址
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxtqyAhZF6uUVrFqbXJ08Vh3V2ZxpVfznXBGMXiD8nmFaHYnLOrUgko9lQcWcFqjaROIQ/exec";
 
     let deposits = [];
     let currentTab = 'active';
@@ -294,7 +293,7 @@
 
     function openAddView() {
         editingId = null;
-        document.getElementById('pageTitle').innerText = "新增定期存款";
+        document.getElementById('pageTitle').innerText = "新增定期";
         document.getElementById('depBank').value = '';
         document.getElementById('depAmt').value = '';
         document.getElementById('depRate').value = '';
@@ -309,7 +308,7 @@
         let item = deposits.find(x => x.id === id);
         if (!item) return;
         editingId = id;
-        document.getElementById('pageTitle').innerText = "編輯定期存款";
+        document.getElementById('pageTitle').innerText = "編輯定期";
         document.getElementById('depBank').value = item.bank;
         document.getElementById('depAmt').value = item.amt;
         document.getElementById('depRate').value = item.rate;
@@ -409,11 +408,9 @@
             let diffMonths = (eDate.getFullYear() - sDate.getFullYear()) * 12 + (eDate.getMonth() - sDate.getMonth());
             let totalMonths = Math.max(1, diffMonths);
 
-            // 如果有填寫自訂利息，就優先採用；否則用公式計算
             let calcInterest = (item.amt * (item.rate / 100) * totalDays) / 365;
             let interest = (item.customInterest !== null && item.customInterest !== undefined && !isNaN(item.customInterest)) ? item.customInterest : calcInterest;
             
-            // 每日利息依然按平均比例推算
             let dailyInterest = interest / totalDays;
 
             let passedDays = Math.ceil((now - sDate) / (1000 * 60 * 60 * 24));
@@ -513,8 +510,8 @@
             document.getElementById('totalInterestDisplay').innerHTML = ``;
         }
         
-        document.getElementById('activeList').innerHTML = activeHtml || '<div style="padding:40px; text-align:center; color:#8e8e93; font-size:15px; font-weight:bold;">沒有進行中的定期存款</div>';
-        document.getElementById('finishedList').innerHTML = finishedHtml || '<div style="padding:40px; text-align:center; color:#8e8e93; font-size:15px; font-weight:bold;">沒有已完結的定期存款</div>';
+        document.getElementById('activeList').innerHTML = activeHtml || '<div style="padding:40px; text-align:center; color:#8e8e93; font-size:15px; font-weight:bold;">沒有進行中的定期</div>';
+        document.getElementById('finishedList').innerHTML = finishedHtml || '<div style="padding:40px; text-align:center; color:#8e8e93; font-size:15px; font-weight:bold;">沒有已完結的定期</div>';
     }
 
     loadFromCloud();
