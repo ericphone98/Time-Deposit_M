@@ -264,7 +264,7 @@
             if (data && data.rates && data.rates.HKD) {
                 liveCnyToHkdRate = data.rates.HKD;
                 // 改為顯示小數點後四個位
-                document.getElementById('rateIndicator').innerText = `實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}`;
+                document.getElementById('rateIndicator').innerText = `匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(4)}`;
                 renderDeposits();
             }
         } catch (e) {
