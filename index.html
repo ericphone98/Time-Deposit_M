@@ -18,7 +18,7 @@
         .card-title { font-size: 13px; opacity: 0.9; margin-bottom: 4px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .rate-info { font-size: 11px; background: rgba(0,0,0,0.15); padding: 2px 8px; border-radius: 6px; font-weight: bold; }
         
-        .start-date-label { font-size: 12px; opacity: 0.9; font-weight: bold; margin-top: 4px; }
+        .start-date-label { font-size: 13px; opacity: 0.95; font-weight: bold; }
         .amount { font-size: 34px; font-weight: bold; margin: 0; font-variant-numeric: tabular-nums; }
         
         /* 本金與利息的分隔線 */
@@ -472,7 +472,8 @@
             let hkdDaily = toHkdValue(dailyInterest, curr);
 
             if (isDone) {
-                finishedItems.push({ html: cardHtml, endDate: eDate, endStr: item.end });
+                // 已完結項目：記錄起息日物件與起息日字串供排序與顯示使用
+                finishedItems.push({ html: cardHtml, startDate: sDate, startStr: item.start });
                 finishedTotalInt += hkdInt;
             } else {
                 activeItems.push({ html: cardHtml, endDate: eDate });
@@ -482,8 +483,11 @@
             }
         });
 
+        // 進行中：按到期日由近至遠排序 (升序)
         activeItems.sort((a, b) => a.endDate - b.endDate);
-        finishedItems.sort((a, b) => b.endDate - a.endDate);
+        
+        // 已完結：改為依起息日 (startDate) 降序排序 —— 最近做的排最上，最早做的排最下
+        finishedItems.sort((a, b) => b.startDate - a.startDate);
 
         let activeHtml = activeItems.map(x => x.html).join('');
         let finishedHtml = finishedItems.map(x => x.html).join('');
@@ -504,21 +508,24 @@
         } else {
             let rangeText = "";
             if (finishedItems.length > 0) {
-                let latestEnd = finishedItems[0].endStr;
-                let oldestEnd = finishedItems[finishedItems.length - 1].endStr;
-                rangeText = `(${latestEnd} ~ ${oldestEnd})`;
+                // 這裡呈現目前清單中（由最上到最下）涵蓋的起息日範圍
+                let latestStart = finishedItems[0].startStr;
+                let oldestStart = finishedItems[finishedItems.length - 1].startStr;
+                rangeText = `(由 ${oldestStart} 至 ${latestStart})`;
             }
 
-            // 第一行：標題由 cardTitle 控制
+            // 第一行：標題
             document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(2)}</span>`;
             
-            // 第二行：金額，第三行：由幾時開始
+            // 第二行：金額
             document.getElementById('cardContentArea').innerHTML = `
                 <span class="amount" id="totalPrincipal">HK$ ${fmt(finishedTotalInt)}</span>
-                <div class="start-date-label">${rangeText}</div>
             `;
 
-            document.getElementById('totalInterestDisplay').innerHTML = ``;
+            // 橫線下方：顯示依起息日計算的時間範圍
+            document.getElementById('totalInterestDisplay').innerHTML = `
+                <div class="start-date-label">⏱️ 時間範圍: ${rangeText}</div>
+            `;
         }
         
         document.getElementById('activeList').innerHTML = activeHtml || '<div style="padding:40px; text-align:center; color:#8e8e93; font-size:15px; font-weight:bold;">沒有進行中的定期</div>';
