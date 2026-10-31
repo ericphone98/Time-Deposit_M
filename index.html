@@ -206,6 +206,16 @@
     let editingId = null;
     let liveCnyToHkdRate = 1.18;
 
+    // 將 YYYY-MM-DD 轉為 DD/MM/YYYY 顯示
+    function formatDateToDisplay(dateStr) {
+        if (!dateStr) return '';
+        let parts = dateStr.split('-');
+        if (parts.length === 3) {
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+        return dateStr;
+    }
+
     async function loadFromCloud() {
         try {
             let res = await fetch(`${GAS_URL}?action=get`);
@@ -433,13 +443,17 @@
             const timeDesc = `${totalMonths} 個月 (${totalDays} 天)`;
             const remainText = isDone ? "🎉 已到期完成" : `⏳ 尚餘 ${remainingDays} 天`;
 
+            // 將卡片上的日期轉換為 DD/MM/YYYY 顯示
+            const displayStart = formatDateToDisplay(item.start);
+            const displayEnd = formatDateToDisplay(item.end);
+
             let cardHtml = `
                 <div class="deposit-item">
                     <div class="deposit-header">
                         <div>
                             <span class="bank-badge">🏦 ${bankName}</span>
                             <span class="currency-badge">${curr}</span>
-                            <div class="deposit-dates">${item.start} ~ ${item.end}</div>
+                            <div class="deposit-dates">${displayStart} ~ ${displayEnd}</div>
                             <div class="deposit-duration">⏱️ ${timeDesc}</div>
                         </div>
                         <div class="deposit-right">
@@ -504,8 +518,8 @@
         } else {
             let rangeText = "";
             if (finishedItems.length > 0) {
-                let latestStart = finishedItems[0].startStr;
-                let oldestStart = finishedItems[finishedItems.length - 1].startStr;
+                let latestStart = formatDateToDisplay(finishedItems[0].startStr);
+                let oldestStart = formatDateToDisplay(finishedItems[finishedItems.length - 1].startStr);
                 rangeText = `${oldestStart} 至 ${latestStart}`;
             }
 
