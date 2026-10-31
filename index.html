@@ -472,7 +472,6 @@
             let hkdDaily = toHkdValue(dailyInterest, curr);
 
             if (isDone) {
-                // 已完結項目：記錄起息日物件與起息日字串供排序與顯示使用
                 finishedItems.push({ html: cardHtml, startDate: sDate, startStr: item.start });
                 finishedTotalInt += hkdInt;
             } else {
@@ -483,10 +482,7 @@
             }
         });
 
-        // 進行中：按到期日由近至遠排序 (升序)
         activeItems.sort((a, b) => a.endDate - b.endDate);
-        
-        // 已完結：改為依起息日 (startDate) 降序排序 —— 最近做的排最上，最早做的排最下
         finishedItems.sort((a, b) => b.startDate - a.startDate);
 
         let activeHtml = activeItems.map(x => x.html).join('');
@@ -508,23 +504,19 @@
         } else {
             let rangeText = "";
             if (finishedItems.length > 0) {
-                // 這裡呈現目前清單中（由最上到最下）涵蓋的起息日範圍
                 let latestStart = finishedItems[0].startStr;
                 let oldestStart = finishedItems[finishedItems.length - 1].startStr;
-                rangeText = `(由 ${oldestStart} 至 ${latestStart})`;
+                rangeText = `${oldestStart} 至 ${latestStart}`;
             }
 
-            // 第一行：標題
             document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(2)}</span>`;
             
-            // 第二行：金額
             document.getElementById('cardContentArea').innerHTML = `
                 <span class="amount" id="totalPrincipal">HK$ ${fmt(finishedTotalInt)}</span>
             `;
 
-            // 橫線下方：顯示依起息日計算的時間範圍
             document.getElementById('totalInterestDisplay').innerHTML = `
-                <div class="start-date-label">⏱️ 時間範圍: ${rangeText}</div>
+                <div class="start-date-label">⏱️ ${rangeText}</div>
             `;
         }
         
