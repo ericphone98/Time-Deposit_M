@@ -18,7 +18,7 @@
         .card-title { font-size: 13px; opacity: 0.9; margin-bottom: 4px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
         .rate-info { font-size: 11px; background: rgba(0,0,0,0.15); padding: 2px 8px; border-radius: 6px; font-weight: bold; }
         
-        .start-date-label { font-size: 12px; opacity: 0.9; font-weight: bold; margin-bottom: 2px; }
+        .start-date-label { font-size: 12px; opacity: 0.9; font-weight: bold; margin-top: 4px; }
         .amount { font-size: 34px; font-weight: bold; margin: 0; font-variant-numeric: tabular-nums; }
         
         /* 本金與利息的分隔線 */
@@ -416,7 +416,7 @@
             let interest = (item.customInterest !== null && item.customInterest !== undefined && !isNaN(item.customInterest)) ? item.customInterest : calcInterest;
             
             let dailyInterest = interest / totalDays;
-            let totalPrincipalAndInterest = item.amt + interest; // 計算本利和
+            let totalPrincipalAndInterest = item.amt + interest;
 
             let passedDays = Math.ceil((now - sDate) / (1000 * 60 * 60 * 24));
             let remainingDays = Math.ceil((eDate - now) / (1000 * 60 * 60 * 24));
@@ -509,10 +509,13 @@
                 rangeText = `(${latestEnd} ~ ${oldestEnd})`;
             }
 
+            // 第一行：標題由 cardTitle 控制
             document.getElementById('cardTitle').innerHTML = `<span>已完結定期總賺取利息</span><span class="rate-info" id="rateIndicator">實時匯率: ¥ 1 = HK$ ${liveCnyToHkdRate.toFixed(2)}</span>`;
+            
+            // 第二行：金額，第三行：由幾時開始
             document.getElementById('cardContentArea').innerHTML = `
-                <div class="start-date-label">${rangeText}</div>
                 <span class="amount" id="totalPrincipal">HK$ ${fmt(finishedTotalInt)}</span>
+                <div class="start-date-label">${rangeText}</div>
             `;
 
             document.getElementById('totalInterestDisplay').innerHTML = ``;
