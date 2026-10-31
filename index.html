@@ -201,7 +201,18 @@
     // 🔗 更新後的 Google Apps Script 雲端 API 網址
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxtqyAhZF6uUVrFqbXJ08Vh3V2ZxpVfznXBGMXiD8nmFaHYnLOrUgko9lQcWcFqjaROIQ/exec";
 
-    let deposits = [];
+    let deposits = [
+        { id: 1, bank: "銀債", currency: "HKD", amt: 160000.00, rate: 3.85, customInterest: null, start: "2025-10-10", end: "2028-10-10" },
+        { id: 2, bank: "銀債", currency: "HKD", amt: 260000.00, rate: 4.25, customInterest: null, start: "2026-09-15", end: "2029-09-17" },
+        { id: 3, bank: "中信", currency: "CNY", amt: 187952.72, rate: 1.35, customInterest: null, start: "2026-05-26", end: "2027-05-26" },
+        { id: 4, bank: "Welab", currency: "HKD", amt: 271363.84, rate: 3.00, customInterest: null, start: "2026-05-27", end: "2027-01-27" },
+        { id: 5, bank: "永隆", currency: "HKD", amt: 758372.38, rate: 2.95, customInterest: null, start: "2026-08-26", end: "2027-02-26" },
+        { id: 6, bank: "Welab", currency: "HKD", amt: 458508.56, rate: 3.00, customInterest: null, start: "2026-09-17", end: "2027-03-17" },
+        { id: 7, bank: "工商", currency: "HKD", amt: 409017.42, rate: 3.25, customInterest: null, start: "2026-10-03", end: "2026-11-01" },
+        { id: 8, bank: "中信", currency: "HKD", amt: 100000.00, rate: 3.16, customInterest: null, start: "2026-10-03", end: "2027-10-03" },
+        { id: 9, bank: "中信", currency: "CNY", amt: 20000.00, rate: 1.50, customInterest: null, start: "2026-10-26", end: "2027-04-26" },
+        { id: 10, bank: "工商", currency: "HKD", amt: 410073.58, rate: 3.25, customInterest: null, start: "2026-11-01", end: "2026-12-01" }
+    ];
     let currentTab = 'active';
     let editingId = null;
     let liveCnyToHkdRate = 1.18;
