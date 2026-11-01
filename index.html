@@ -432,7 +432,10 @@
             let totalMonths = Math.max(1, diffMonths);
 
             let calcInterest = (item.amt * (item.rate / 100) * totalDays) / 365;
-            let interest = (item.customInterest !== null && item.customInterest !== undefined && !isNaN(item.customInterest)) ? item.customInterest : calcInterest;
+            let rawInterest = (item.customInterest !== null && item.customInterest !== undefined && !isNaN(item.customInterest)) ? item.customInterest : calcInterest;
+            
+            // 💡 關鍵調整：每筆利息先四捨五入至小數點後兩位，再進行後續累加運算
+            let interest = Math.round(rawInterest * 100) / 100;
             
             let dailyInterest = interest / totalDays;
             let totalPrincipalAndInterest = item.amt + interest;
